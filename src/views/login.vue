@@ -10,9 +10,9 @@
     <van-form class="form" ref="form">
       <van-field placeholder="请输入手机号"  v-model="form.mobile" :rules="rules.mobile"></van-field>
       <van-field placeholder="请输入验证码" v-model="form.code" :rules="rules.code">
-      <template #button>
-        <span class="send" @click="send">{{second===0 ? '发送验证码':`${second}秒后获取`}}</span>
-      </template>
+        <template #button>
+          <span class="send" @click="send">{{second===0 ? '发送验证码':`${second}秒后获取`}}</span>
+        </template>
       </van-field>
     </van-form>
     <van-button @click="login">登录</van-button>

@@ -18,7 +18,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .geek-icon {
   display: inline-block;
   position: relative;

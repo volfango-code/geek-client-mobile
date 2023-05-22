@@ -1,9 +1,9 @@
 <template>
   <div class="home-page">
     <!-- 顶部导航 -->
-    <van-tabs>
+    <van-tabs animated>
       <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
-
+        <ArticleList :channelId="channel.id"/>
       </van-tab>
     </van-tabs>
     <!-- 搜索、频道 -->
@@ -15,8 +15,9 @@
 </template>
 
 <script>
-import geekIcon from '@/components/geek-icon'
 import { getAllChannels } from '@/api/channel'
+import geekIcon from '@/components/geek-icon'
+import ArticleList from '@/components/article-list.vue'
 export default {
   name: 'HomePage',
   data () {
@@ -25,18 +26,21 @@ export default {
     }
   },
   components: {
-    geekIcon
+    geekIcon,
+    ArticleList
   },
   async created () {
+    // 获取所有频道
     const [err, res] = await getAllChannels()
     if (!err) this.channels = res.data.channels
   }
+
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 ::v-deep .van-tabs {
-   height: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   .van-tabs__line {
