@@ -1,13 +1,13 @@
 <template>
  <div>
-  <div class="article-item van-hairline--bottom">
+  <div class="article-item van-hairline--bottom" @click="$router.push('/article?id='+article.art_id)">
     <p class="title van-multi-ellipsis--l2" :class="{'w66':article.cover.type === 1}">{{article.title}}</p>
     <img v-for="(img,index) in article.cover.images" :src="img" :key="index" alt="" class="img">
     <div class="info">
       <span>{{article.aut_name}}</span>
       <span>{{article.comm_count}}评论</span>
       <span>{{article.pubdate|relativeTime}}</span>
-      <GeekIcon name="esay-close"></GeekIcon>
+      <GeekIcon name="esay-close" @click.native="print(article)"></GeekIcon>
     </div>
   </div>
  </div>

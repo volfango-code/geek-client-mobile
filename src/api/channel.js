@@ -18,11 +18,13 @@ export const getAllChannels = async () => {
       // 本地没有数据，请求数据并存储到本地
       const [, res] = await request({ url: 'v1_0/user/channels' })
       localStorage.setItem('geek-client-mobile-channels', JSON.stringify(res.data.channels))
+      console.log(res.data.channels)
       return res.data.channels
     }
   } else {
     // 已登录，请求数据
     const [, res] = await request({ url: 'v1_0/user/channels' })
+    console.log(res)
     return res.data.channels
   }
 }

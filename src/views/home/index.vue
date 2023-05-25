@@ -42,6 +42,7 @@ export default {
   async created () {
     // 获取所有频道
     const [, res] = await getAllChannelsTest()
+    console.log(res)
     this.channels = res.data.channels
   },
   watch: {
