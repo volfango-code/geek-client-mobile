@@ -1,38 +1,56 @@
 <template>
   <div class="home-page">
     <!-- 顶部导航 -->
-    <van-tabs animated>
-      <van-tab v-for="channel in channels" :title="channel.name" :key="channel.id">
+    <van-tabs animated v-model="activeIndex">
+      <van-tab v-for="channel in channelsTemp" :title="channel.name" :key="channel.id" @>
         <ArticleList :channelId="channel.id"/>
       </van-tab>
     </van-tabs>
     <!-- 搜索、频道 -->
     <div class="btn-wrapper">
       <geekIcon name="search"></geekIcon>
-      <geekIcon name="channel"></geekIcon>
+      <geekIcon name="channel" @click.native="showChannel=true"></geekIcon>
     </div>
+    <!-- 频道 弹出层 -->
+    <ArticleChannel v-model="showChannel" :activeIndex="activeIndex" :channels="channels" @channelsTemp="value => {channelsTemp = value}" @update:activeIndex="activeIndex = $event"/>
   </div>
 </template>
 
 <script>
-import { getAllChannels } from '@/api/channel'
+import { getAllChannelsTest } from '@/api/channel'
 import geekIcon from '@/components/geek-icon'
-import ArticleList from '@/components/article-list.vue'
+import ArticleList from '@/components/article-list'
+import ArticleChannel from '@/components/article-channel'
 export default {
   name: 'HomePage',
   data () {
     return {
-      channels: []
+      // 所有频道
+      channels: [],
+      channelsTemp: [],
+      // 控制频道弹出层的显示隐藏
+      showChannel: false,
+      // 频道索引
+      activeIndex: 0
     }
   },
   components: {
     geekIcon,
-    ArticleList
+    ArticleList,
+    ArticleChannel
   },
   async created () {
     // 获取所有频道
-    const [err, res] = await getAllChannels()
-    if (!err) this.channels = res.data.channels
+    const [, res] = await getAllChannelsTest()
+    this.channels = res.data.channels
+  },
+  watch: {
+    // 根据用户登录状态，在切换时需要重新调用接口获取数据
+    '$store.state.user.token': async function () {
+      const [, res] = await getAllChannelsTest()
+      this.channels = res.data.channels
+      this.activeIndex = 0
+    }
   }
 
 }
