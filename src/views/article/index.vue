@@ -45,11 +45,12 @@
         </div>
       </div>
       <!-- 内容：文章内容 -->
-      <div class="main">
+      <div class="main" ref="main">
         <div class="html" v-html="article.content" v-highlight></div>
         <div class="space"></div>
       </div>
       <!-- 评论：评论组件 -->
+      <ArticleComment :article="article" @click-comment="scrollToComment"/>
     </div>
   </div>
 </template>
@@ -57,6 +58,7 @@
 <script>
 import { getArticle } from '@/api/article'
 import { followAuthor } from '@/api/user'
+import ArticleComment from '@/components/article-comment.vue'
 export default {
   name: 'ArticlePage',
   data () {
@@ -65,7 +67,9 @@ export default {
       // 是否在顶部导航显示作者信息
       showNavAuthor: false,
       // 控制加载骨架的显示
-      loading: false
+      loading: false,
+      // 是否滚动到评论位置
+      toComment: false
     }
   },
   created () {
@@ -98,11 +102,24 @@ export default {
       // 操作成功
       this.$toast.success(newStatus ? '关注成功' : '已取消关注')
       this.article.is_followed = newStatus
+    },
+    // 滚动到评论
+    scrollToComment () {
+      // 评论区位置 = header + main
+      const headerHeight = this.$refs.header.offsetHeight
+      const mainHeight = this.$refs.main.offsetHeight
+      // 对是否滚动到评论区的状态进行取反
+      this.toComment = !this.toComment
+      // 滚动操作
+      if (this.toComment) {
+        this.$refs.wrapper.scrollTop = headerHeight + mainHeight
+      } else {
+        this.$refs.wrapper.scrollTop = 0
+      }
     }
   },
-  // 不缓存文章组件
-  deactivated () {
-    this.$destroy()
+  components: {
+    ArticleComment
   }
 }
 </script>

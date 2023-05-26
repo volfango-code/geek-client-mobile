@@ -1,9 +1,9 @@
 <template>
     <div class="article-list" ref="ArticleList" @scroll="rememberScroll">
        <van-pull-refresh v-model="refreshing" @refresh="onRefresh" success-text="刷新成功">
-        <van-list  v-model="loading" :finished="finished" @load="onLoad()" finished-text="没有更多了">
-          <article-item v-for="article in articles" :key="article.id" :article="article"/>
-        </van-list>
+          <van-list  v-model="loading" :finished="finished" @load="onLoad()" finished-text="没有更多了">
+            <article-item v-for="article in articles" :key="article.id" :article="article"/>
+          </van-list>
        </van-pull-refresh>
     </div>
 </template>
