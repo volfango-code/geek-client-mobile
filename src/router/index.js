@@ -10,6 +10,8 @@ const Home = () => import('@/views/home')
 const Question = () => import('@/views/question')
 const Video = () => import('@/views/video')
 const User = () => import('@/views/user')
+const UserProfile = () => import('@/views/profile')
+const UserChat = () => import('@/views/user/chat')
 const Artcile = () => import('@/views/article')
 const Login = () => import('@/views/login')
 
@@ -19,6 +21,8 @@ const routes = [
   { path: '/question', components: { default: Question, tabbar: Tabbar } },
   { path: '/video', components: { default: Video, tabbar: Tabbar } },
   { path: '/user', components: { default: User, tabbar: Tabbar } },
+  { path: '/user/profile', component: UserProfile },
+  { path: '/user/chat', component: UserChat },
   { path: '/article', component: Artcile },
   { path: '/login', component: Login }
 ]
