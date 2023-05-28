@@ -1,4 +1,5 @@
-import request from '@/utils/request'
+import request, { baseURL } from '@/utils/request'
+import axios from 'axios'
 
 // 关注 和 取消关注
 export const followAuthor = (author, isFollow) => {
@@ -48,4 +49,13 @@ export const updateUserProfile = user => {
   })
 }
 
-// 编辑资料-修改性别
+// 刷新token
+export const refreshTokenAPI = refreshToken => {
+  return axios({
+    url: baseURL + 'v1_0/authorizations',
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${refreshToken}`
+    }
+  })
+}

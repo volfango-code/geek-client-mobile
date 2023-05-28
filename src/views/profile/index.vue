@@ -99,6 +99,7 @@ export default {
       }).then(() => {
         // 清除token
         this.$store.commit('user/setToken', '')
+        this.$store.commit('user/setRefreshToken', '')
         // 重定向到首页
         this.$router.push('/')
         // 提示退出成功

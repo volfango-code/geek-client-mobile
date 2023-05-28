@@ -33,7 +33,7 @@
 <script>
 import GeekIcon from '@/components/geek-icon.vue'
 import { getUserProfile } from '@/api/user'
-// import { baseURL } from '@/utils/request'
+import { baseURL } from '@/utils/request'
 import sockectIO from 'socket.io-client'
 export default {
   name: 'UserChatPage',
@@ -55,7 +55,7 @@ export default {
     const [, res] = await getUserProfile()
     this.myAvatar = res.data.photo
     // 1. 建立连接
-    this.io = sockectIO('http://geek.itheima.net/', {
+    this.io = sockectIO(baseURL, {
       query: {
         token: this.$store.state.user.token
       },
@@ -68,6 +68,8 @@ export default {
     // 3. 接收消息
     this.io.on('message', data => {
       this.list.push({ name: 'xz', msg: data.msg })
+      // 滚动到底部
+      this.scrollBottom()
     })
   },
   beforeDestroy () {
@@ -75,12 +77,25 @@ export default {
     this.io.close()
   },
   methods: {
+    // 发送消息
     send () {
       if (!this.value) return this.$toast('请输入内容')
       // 发送消息
       this.io.emit('message', { msg: this.value, timestamp: Date.now() })
       this.list.push({ name: 'my', msg: this.value })
       this.value = ''
+      // 滚动到底部
+      this.scrollBottom()
+    },
+    // 滚动到最底部
+    scrollBottom () {
+      // $nextTick 等DOM更新完毕执行下一件事情
+      this.$nextTick(() => {
+      // 思路：滚动的距离 = 可滚动的高度 - 自身高度
+        const scrollHeight = this.$refs.list.scrollHeight
+        const offsetHeight = this.$refs.list.offsetHeight
+        this.$refs.list.scrollTop = scrollHeight - offsetHeight
+      })
     }
   }
 }

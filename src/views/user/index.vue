@@ -73,8 +73,8 @@ export default {
   methods: {
     async initData () {
       // 获取当前用户信息
-      const [, res] = await getUserInfo()
-      this.user = res.data
+      const [err, res] = await getUserInfo()
+      if (!err) this.user = res.data
     }
   },
   components: {
