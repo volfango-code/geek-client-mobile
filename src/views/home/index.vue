@@ -2,7 +2,7 @@
   <div class="home-page">
     <!-- 顶部导航 -->
     <van-tabs animated v-model="activeIndex">
-      <van-tab v-for="channel in channelsTemp" :title="channel.name" :key="channel.id" @>
+      <van-tab v-for="channel in userChannels" :title="channel.name" :key="channel.id" @>
         <ArticleList :channelId="channel.id"/>
       </van-tab>
     </van-tabs>
@@ -11,26 +11,27 @@
       <geekIcon name="search"></geekIcon>
       <geekIcon name="channel" @click.native="showChannel=true"></geekIcon>
     </div>
-    <!-- 频道 弹出层 -->
-    <ArticleChannel v-model="showChannel" :activeIndex="activeIndex" :channels="channels" @channelsTemp="value => {channelsTemp = value}" @update:activeIndex="activeIndex = $event"/>
+    <!-- 频道弹出层 -->
+    <ArticleChannel v-model="showChannel" :channels="channels" :activeIndex.sync="activeIndex" :userChannels.sync="userChannels"/>
   </div>
 </template>
 
 <script>
-import { getAllChannelsTest } from '@/api/channel'
 import geekIcon from '@/components/geek-icon'
 import ArticleList from '@/components/article-list'
-import ArticleChannel from '@/components/article-channel'
+import { getAllChannels, getUserChannel } from '@/api/channel'
+import ArticleChannel from '@/components/article-channel.vue'
 export default {
   name: 'HomePage',
   data () {
     return {
       // 所有频道
       channels: [],
-      channelsTemp: [],
+      // 用户频道
+      userChannels: [],
       // 控制频道弹出层的显示隐藏
       showChannel: false,
-      // 频道索引
+      // 导航索引
       activeIndex: 0
     }
   },
@@ -40,18 +41,12 @@ export default {
     ArticleChannel
   },
   async created () {
-    // 获取所有频道
-    const [, res] = await getAllChannelsTest()
-    console.log(res)
+    const [, res] = await getAllChannels()
     this.channels = res.data.channels
+    this.userChannels = await getUserChannel()
   },
   watch: {
-    // 根据用户登录状态，在切换时需要重新调用接口获取数据
-    '$store.state.user.token': async function () {
-      const [, res] = await getAllChannelsTest()
-      this.channels = res.data.channels
-      this.activeIndex = 0
-    }
+
   }
 
 }
